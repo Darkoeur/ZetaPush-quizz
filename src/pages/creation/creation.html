@@ -1,0 +1,43 @@
+<ion-header>
+
+    <ion-navbar color="dark">
+        <ion-title>
+            <img src="assets/zp_logo.png" alt="X" title="zp logo" />
+            <span class="title">ZetaQuizz</span>
+        </ion-title>
+        <ion-buttons start>
+          <button (click)="dismiss()" ion-button icon-only>
+            <ion-icon name="close"></ion-icon>
+          </button>
+        </ion-buttons>
+    </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <h1>Creation</h1>
+
+    <p>More options will be soon available !</p>
+
+    <ion-list inset padding text-center id="creation-form">
+
+      <ion-item padding>
+        <ion-input type="text" placeholder="Name"></ion-input>
+        <ion-icon clear item-right name="bookmark" class="brick-blue"></ion-icon>
+      </ion-item>
+
+      <ion-item padding>
+          <ion-input type="text" placeholder="Time"></ion-input>
+          <ion-icon clear item-right name="time" class="brick-green"></ion-icon>
+      </ion-item>
+
+      <ion-item padding>
+          <ion-input type="text" placeholder="Password"></ion-input>
+          <ion-icon clear item-right name="code-working" class="brick-red"></ion-icon>
+      </ion-item>
+
+      <button (click)="createRoom()" large ion-button>CREATE</button>
+
+    </ion-list>
+</ion-content>

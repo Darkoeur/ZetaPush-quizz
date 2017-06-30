@@ -1,0 +1,94 @@
+page-game {
+    #logout-btn {
+        height: 50px;
+        width: 50px;
+    }
+
+    b {
+        position: relative;
+        top: -12px;
+        margin: 10px;
+    }
+
+    #countdown {
+        margin-top: 50px;
+        margin-bottom: 30px;
+        padding-bottom: 30px;
+        border-bottom: solid lightgray 1px;
+    }
+
+    .game-question {
+        background-color: #222222;
+        color: white;
+        padding: 10px;
+        font-size: 120%;
+    }
+
+    .game-question ion-card-header {
+        color: white;
+        font-size: 120%;
+    }
+
+    .game-question ion-card-content {
+        font-size: 100%;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .game-answer {
+        margin-top: 20px;
+    }
+
+    .game-answer-blocked {
+        opacity: 0.5;
+    }
+
+    .game-answer:not(.game-answer-blocked):active {
+        position: relative;
+        top: 2px;
+        left: 2px;
+    }
+
+    .game-answer ion-card-content {
+        text-align: center;
+        font-size: 130%;
+    }
+
+    .game-answer:hover {
+        cursor: pointer;
+    }
+
+    #game-answer-section .game-answer:nth-child(1) {
+        background-color: #80CD3D;
+    }
+
+    #game-answer-section .game-answer:nth-child(2) {
+        background-color: #1AB5F1;
+    }
+
+    #game-answer-section .game-answer:nth-child(3) {
+        background-color: #F1452A;
+    }
+
+    #game-answer-section .game-answer:nth-child(4) {
+        background-color: #FBC81E;
+    }
+
+    #game-leaderboard .item-inner {
+        margin-left: 0px;
+    }
+
+    #game-leaderboard button {
+        text-align: center;
+    }
+
+    #counter-btn {
+        height: 50px;
+        width: 50px;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        opacity: 1;
+    }
+
+}

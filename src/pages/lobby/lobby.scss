@@ -1,0 +1,51 @@
+page-lobby {
+    h1 {
+        padding-left: 30px;
+    }
+
+    p {
+        padding-left: 20px;
+        padding-bottom: 20px;
+    }
+
+    ion-grid {
+        text-align: center;
+    }
+
+    .row-room {
+        padding-top: 15px;
+        padding-bottom: 15px;
+        font-size: 120%;
+    }
+
+    .row-room.closed {
+        opacity: 0.7;
+        background-color: rgb(240,240,240);
+    }
+
+    .row-room:not(.closed):hover {
+        cursor: pointer;
+        background-color: rgb(240,240,240);
+    }
+
+    .row-labels {
+        text-transform: uppercase;
+        color: white;
+        background-color: #222222;
+        font-size: 150%;
+    }
+
+    #label-name { background-color: #1AB5F1; padding: 10px; }
+
+    #label-people { background-color: #F1452A; padding: 10px; }
+
+    #label-join { background-color: #80CD3D; padding: 10px; }
+
+    .success {
+        color: green;
+    }
+
+    .failure {
+        color: red;
+    }
+}
