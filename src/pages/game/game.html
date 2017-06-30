@@ -1,0 +1,72 @@
+<ion-header>
+    <ion-navbar color="dark">
+        <ion-title>
+            <img src="assets/zp_logo.png" alt="X" title="zp logo" />
+            <span class="title">ZetaQuizz</span>
+        </ion-title>
+        <ion-buttons end>
+            <button (click)="exit()" id="logout-btn" color="danger" round ion-button icon-only>
+                <ion-icon name="log-out"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+
+    <div *ngIf="!gameStarted; else gameView">
+        <h1>{{gameData?.name}}</h1>
+
+        <div id="countdown" text-center>
+            <h3>Game will start in {{ timeLeft }} second<span *ngIf="timeLeft > 1">s</span></h3>
+        </div>
+
+        <h5>Participants :</h5>
+        <ion-grid padding>
+            <ion-row *ngFor="let player of participants">
+                <ion-icon name="arrow-dropright"></ion-icon>
+                <b>{{player.nickname}}</b>
+            </ion-row>
+        </ion-grid>
+
+    </div>
+
+    <!-- once in game, the user will see that : -->
+    <ng-template #gameView>
+
+        <!-- QUESTION -->
+        <ion-card *ngIf="instance" class="game-question">
+            <ion-card-header>#{{instanceNumero}} - {{instance?.question?.category}}</ion-card-header>
+            <ion-card-content>{{instance?.question?.text}}</ion-card-content>
+        </ion-card>
+
+
+        <!-- ANSWERS -->
+        <section id="game-answer-section">
+            <ion-card *ngFor="let answer of instance?.answers" (click)="answerQuestion(answer)" [ngClass]="{'game-answer': true, 'game-answer-blocked': !canAnswer}">
+                <ion-card-content>
+                    {{answer.text}}
+                </ion-card-content>
+            </ion-card>
+        </section>
+        <!-- END ANSWERS -->
+
+        <!-- LEADERBOARD REALTIME SYNC -->
+        <section id="game-leaderboard">
+            <ion-list padding>
+                <ion-item *ngFor="let player of bestParticipants()">
+                    <ion-icon name="contact" item-start></ion-icon>
+                    {{player.nickname}}
+                    <div item-end>
+                        {{player.score}}
+                    </div>
+                </ion-item>
+            </ion-list>
+        </section>
+        <button ion-button round color="light" disabled="true" id="counter-btn">
+            {{timeLeft}}
+        </button>
+    </ng-template>
+
+</ion-content>
