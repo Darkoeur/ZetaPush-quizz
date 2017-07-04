@@ -34,15 +34,15 @@
                 No room found
             </ion-col>
         </ion-row>
-        <ion-row *ngFor="let room of existingRooms" (click)="joinRoom(room)" [ngClass]="{'row-room': true, 'closed': !room.open}">
+        <ion-row *ngFor="let room of existingRooms" (click)="joinRoom(room)" [ngClass]="{'row-room': true, 'closed': !(room.metadata.open)}">
             <ion-col col-6>
                 {{room.name}}
             </ion-col>
             <ion-col col-3>
-                {{room.people}}
+                {{room.members.length}}
             </ion-col>
             <ion-col col-3>
-                <ion-icon [name]="room.open ? 'checkmark' : 'close'" [ngClass]="{'success': room.open, 'failure': !room.open}"></ion-icon>
+                <ion-icon [name]="room.metadata.open ? 'checkmark' : 'close'" [ngClass]="{'success': room.metadata.open, 'failure': !room.metadata.open}"></ion-icon>
             </ion-col>
         </ion-row>
     </ion-grid>

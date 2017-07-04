@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import { NavController, ToastController, LoadingController, NavParams } from 'ionic-angular';
 
-import { Room, GameMetadata, Player, QuestionInstance, Answer } from '../../services/interfaces.service';
+import { ZetaPushConnection } from 'zetapush-angular';
+
+import { Room, Player, QuestionInstance, Answer } from '../../services/interfaces.service';
+import { ServerRoom, ServerMember } from '../../services/server.interfaces.service';
+import { RoomService } from '../../services/rooms.service';
 import { HomePage } from '../home/home';
 
 @Component({
@@ -10,8 +14,8 @@ import { HomePage } from '../home/home';
 })
 export class Game {
 
-    participants: Array<Player>;
-    gameData: Room;
+    participants: Array<ServerMember> = [];
+    gameData: ServerRoom;
     timeLeft: number = 60;
     gameStarted: boolean = false;
     canAnswer: boolean = false;
@@ -24,51 +28,53 @@ export class Game {
   constructor(public navCtrl: NavController,
               public toastCtrl: ToastController,
               public loadingCtrl: LoadingController,
-              public navParams: NavParams) {
+              public navParams: NavParams,
+              private roomService: RoomService,
+              private zpConnection: ZetaPushConnection) {
 
-      this.participants = [
-          {
-              nickname: 'Antoine',
-              key: '@xAdfezau19X',
-              score: 0
-          },
-          {
-              nickname: 'Zetapush',
-              key: 'dkzq]12oJAd8',
-              score: 0
-          },
-          {
-              nickname: 'Mathys',
-              key: 'norandomid',
-              score: 0
-          }
-      ];
   }
 
   ionViewWillEnter() {
 
       // TODO: load participants
       // TODO: obtain time left before starting
+
+      // 1°) load the nav parameters
       this.gameData = this.navParams.get('data');
+
+      // 2°) join the room
+      this.roomService.join(this.gameData.id);
+
+      // 3°) subscribe to the list of players
+      this.roomService.roomMembers.subscribe(
+          result => {
+              this.participants = result;
+          }
+      );
+
+
       this.timeLeft = 5;
       this.gameStarted = false;
 
+
       // Interval decreasing the counter before game starts
+      /*
       this.timer = setInterval(() => {
           if(!this.decreaseTime()){
               // Game has started
               clearTimeout(this.timer);
           }
           console.log('iteration');
-      }, 1000);
+      }, 1000);*/
   }
 
   ionViewWillLeave() {
+      // TODO: leave the room
+
       console.log('clearing events');
       if(this.timer){
           clearTimeout(this.timer)
       }
-      return true;
   }
 
   ionViewDidEnter() {
@@ -81,6 +87,18 @@ export class Game {
   }
 
   exit() {
+      // Leaving the room
+      this.roomService.leave(this.gameData.id).then(
+          () => {
+              // Disconnecting from ZetaPush
+              this.zpConnection.disconnect();
+          }
+
+      );
+
+
+
+      // Coming back Home
       this.navCtrl.setRoot(HomePage);
   }
 
@@ -122,7 +140,7 @@ export class Game {
       }
   }
 
-  bestParticipants(): Array<Player> {
+  bestParticipants(): Array<ServerMember> {
       return this.participants.slice(0,3);
   }
 
@@ -161,7 +179,7 @@ export class Game {
           if(!this.decreaseQuestionTime()){
 
               this.canAnswer = false;
-              clearTimeout(this.timer);
+              clearInterval(this.timer);
               setTimeout(() => {
                   this.receiveQuestion();
               }, 2000);

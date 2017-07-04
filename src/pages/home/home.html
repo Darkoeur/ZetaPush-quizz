@@ -13,10 +13,15 @@
 
     <h1>Welcome !</h1>
 
-    <p>First, chose your nickname :</p>
+    <p>First, type your credentials :</p>
     <ion-item>
         <ion-label color="primary" stacked>Nickname</ion-label>
-        <ion-input type="text" placeholder="Original is better ;)"></ion-input>
+        <ion-input [(ngModel)]="login" type="text" placeholder="Original is better ;)"></ion-input>
+    </ion-item>
+
+    <ion-item>
+        <ion-label color="primary" stacked>Password</ion-label>
+        <ion-input [(ngModel)]="password" type="text" placeholder=""></ion-input>
     </ion-item>
 
     <div class="center">

@@ -5,6 +5,8 @@ export interface Room {
     metadata: GameMetadata;
 }
 
+
+
 export interface GameMetadata {
     owner: string;
 }

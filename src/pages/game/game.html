@@ -26,7 +26,7 @@
         <ion-grid padding>
             <ion-row *ngFor="let player of participants">
                 <ion-icon name="arrow-dropright"></ion-icon>
-                <b>{{player.nickname}}</b>
+                <b>{{player.userKey}} [{{player.login}}]</b>
             </ion-row>
         </ion-grid>
 
@@ -44,10 +44,15 @@
 
         <!-- ANSWERS -->
         <section id="game-answer-section">
-            <ion-card *ngFor="let answer of instance?.answers" (click)="answerQuestion(answer)" [ngClass]="{'game-answer': true, 'game-answer-blocked': !canAnswer}">
+
+            <ion-card *ngFor="let answer of instance?.answers"
+                      (click)="answerQuestion(answer)"
+                      [ngClass]="{'game-answer': true, 'game-answer-blocked': !canAnswer}" >
+
                 <ion-card-content>
                     {{answer.text}}
                 </ion-card-content>
+
             </ion-card>
         </section>
         <!-- END ANSWERS -->

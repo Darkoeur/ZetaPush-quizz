@@ -1,66 +1,83 @@
 import { Component } from '@angular/core';
-import { NavController, ModalController, NavParams } from 'ionic-angular';
+import { NavController, ModalController, AlertController, NavParams } from 'ionic-angular';
+
 import { Creation } from '../creation/creation';
 import { Game } from '../game/game';
-
-import { Room, GameMetadata } from '../../services/interfaces.service';
+import { ServerRoom } from '../../services/server.interfaces.service';
+import { RoomService } from '../../services/rooms.service';
 
 @Component({
-  selector: 'page-lobby',
-  templateUrl: 'lobby.html',
+    selector: 'page-lobby',
+    templateUrl: 'lobby.html',
 })
 export class Lobby {
 
-    existingRooms: Array<Room>;
+    existingRooms: Array<ServerRoom>;
 
-  constructor(public navCtrl: NavController, public modalCtrl: ModalController, public navParams: NavParams) {
-      this.existingRooms = [
-          {
-              name: 'Antoine\'s room',
-              people: 3,
-              open: true,
-              metadata: {
-                  owner: '@xAdfezau19X'
-              }
-          },
-          {
-              name: 'Server party',
-              people: 9,
-              open: false,
-              metadata: {
-                  owner: 'dkzq]12oJAd8'
-              }
-          },
-          {
-              name: 'Newbies welcomed',
-              people: 2,
-              open: true,
-              metadata: {
-                  owner: 'noideayet'
-              }
-          }
-      ];
-      // this.existingRooms = [];
-  }
+    constructor(public navCtrl: NavController,
+        public modalCtrl: ModalController,
+        public alertCtrl: AlertController,
+        public navParams: NavParams,
+        private roomService: RoomService) {
 
-  ionViewWillEnter() {
-      // TODO: Load rooms
-  }
+            roomService.rooms.subscribe(
+                result => {
+                    this.existingRooms = result;
+                }
+            );
+
+            roomService.roomMembers.subscribe(
+                result => {
+                    console.debug(result);
+                }
+            )
+
+        }
 
 
-  hostRoom() {
-      this.goToCreation();
-  }
+        ionViewWillEnter() {
+            // List all the existing rooms
+            this.roomService.list();
+        }
 
-  joinRoom(data: Room) {
-      if(data.open){
-          this.navCtrl.setRoot(Game, {data: data});
-      }
-  }
 
-  goToCreation() {
-      let form = this.modalCtrl.create(Creation);
-      form.present();
-  }
 
-}
+        // When joining a room
+        joinRoom(data: ServerRoom) {
+            if(data.metadata.open){
+                // We ask the server
+                this.roomService.join(data.id).then(
+                    result => {
+                        if(result.isOpen){
+                            // If it's OK, we navigate to the game view
+                            this.navCtrl.setRoot(Game, {data: data});
+                        } else {
+                            this.roomService.joinLobby();
+                            this.roomService.list();
+                            let alert = this.alertCtrl.create({
+                                title: 'Impossible !',
+                                subTitle: 'It looks like the room you have tried to join is now closed..',
+                                buttons: ['OK']
+                            });
+                            alert.present();
+                        }
+                    },
+                    error => {
+                        console.log('Error occurred during join process');
+                    }
+                );
+            }
+        }
+
+
+        // When the user would like to create is own room
+        hostRoom() {
+            this.goToCreation();
+        }
+
+        goToCreation() {
+            let form = this.modalCtrl.create(Creation);
+            form.present();
+        }
+
+    }
