@@ -13,6 +13,8 @@ import { RoomService } from '../../services/rooms.service';
 export class Lobby {
 
     existingRooms: Array<ServerRoom>;
+    roomsSubscription: any;
+    membersSubscription: any;
 
     constructor(public navCtrl: NavController,
         public modalCtrl: ModalController,
@@ -20,24 +22,30 @@ export class Lobby {
         public navParams: NavParams,
         private roomService: RoomService) {
 
-            roomService.rooms.subscribe(
+        }
+
+
+        ionViewWillEnter() {
+            console.debug('LOBBY WILL ENTER');
+            this.roomsSubscription = this.roomService.rooms.subscribe(
                 result => {
                     this.existingRooms = result;
                 }
             );
 
-            roomService.roomMembers.subscribe(
+            this.membersSubscription = this.roomService.roomMembers.subscribe(
                 result => {
-                    console.debug(result);
+                    console.debug("Members in our room have changed : ", result);
                 }
-            )
+            );
 
+            this.roomService.list();
         }
 
-
-        ionViewWillEnter() {
-            // List all the existing rooms
-            this.roomService.list();
+        ionViewWillLeave() {
+            console.debug('LOBBY WILL LEAVE');
+            this.roomsSubscription.unsubscribe();
+            this.membersSubscription.unsubscribe();
         }
 
 
@@ -76,8 +84,7 @@ export class Lobby {
         }
 
         goToCreation() {
-            let form = this.modalCtrl.create(Creation);
-            form.present();
+            this.navCtrl.push(Creation);
         }
 
     }

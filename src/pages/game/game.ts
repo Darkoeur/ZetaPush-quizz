@@ -3,7 +3,7 @@ import { NavController, ToastController, LoadingController, NavParams } from 'io
 
 import { ZetaPushConnection } from 'zetapush-angular';
 
-import { Room, Player, QuestionInstance, Answer } from '../../services/interfaces.service';
+import { QuestionInstance, Answer } from '../../services/interfaces.service';
 import { ServerRoom, ServerMember } from '../../services/server.interfaces.service';
 import { RoomService } from '../../services/rooms.service';
 import { HomePage } from '../home/home';
@@ -25,6 +25,8 @@ export class Game {
     instance: QuestionInstance;
     instanceNumero: number = 0;
 
+    membersSubscription: any;
+
   constructor(public navCtrl: NavController,
               public toastCtrl: ToastController,
               public loadingCtrl: LoadingController,
@@ -36,7 +38,6 @@ export class Game {
 
   ionViewWillEnter() {
 
-      // TODO: load participants
       // TODO: obtain time left before starting
 
       // 1°) load the nav parameters
@@ -46,32 +47,38 @@ export class Game {
       this.roomService.join(this.gameData.id);
 
       // 3°) subscribe to the list of players
-      this.roomService.roomMembers.subscribe(
+      this.membersSubscription = this.roomService.roomMembers.subscribe(
           result => {
               this.participants = result;
           }
       );
 
+      // 4°) calculation of the time left before starting
+      const now: number = Date.now();
+      const willCloseAt: number = this.gameData.metadata.createdAt + this.gameData.metadata.openDelay;
 
-      this.timeLeft = 5;
+      // We parse it in milliseconds
+      this.timeLeft = Math.floor((willCloseAt - now)/1000);
+
+      // 5°) other game variables initialization
       this.gameStarted = false;
 
 
       // Interval decreasing the counter before game starts
-      /*
       this.timer = setInterval(() => {
           if(!this.decreaseTime()){
               // Game has started
               clearTimeout(this.timer);
           }
           console.log('iteration');
-      }, 1000);*/
+      }, 1000);
   }
 
   ionViewWillLeave() {
       // TODO: leave the room
 
-      console.log('clearing events');
+      console.log('Cleaning environment');
+      this.membersSubscription.unsubscribe();
       if(this.timer){
           clearTimeout(this.timer)
       }
@@ -117,7 +124,7 @@ export class Game {
               loading.dismiss();
               this.gameStarted = true;
               // TODO: subscribe to a server specific channel
-              this.receiveQuestion();
+              // this.receiveQuestion();
           }, 1500);
           return false;
       }

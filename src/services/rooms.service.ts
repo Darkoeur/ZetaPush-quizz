@@ -25,7 +25,11 @@ export class RoomService implements OnDestroy {
     private listener: any;
     private subscription_1: any;
 
+    // SETTING LISTENERS AND OBSERVABLES
+
     constructor(private api: RoomApi, private zpClient: ZetaPushClient) {
+
+        console.debug('SETTING LISTENERS > constructor of RoomService');
 
         // We add a listener for group presences
         this.listener = this.zpClient.createService({
@@ -33,7 +37,8 @@ export class RoomService implements OnDestroy {
             deploymentId: 'cr_grp_groups',
             listener: {
                 presence: (notif) => {
-
+                    console.debug('PRESENCE > A presence has be notified');
+                    // Unfortunately we only have the key
                     var user: string = notif.data.user.owner;
                     let members: Array<ServerMember> = this._roomMembers.getValue();
 
@@ -43,14 +48,21 @@ export class RoomService implements OnDestroy {
                     if(notif.data.presence === 'ON') {
                         // Someone joined in
                         if(pos == -1) {
+                            console.debug('PRESENCE > Someone joined !');
                             // Not yet registered
-                            members.push({userKey: user});
-                            this._roomMembers.next(members);
+                            this.getDetails(user).then(
+                                result => {
+                                    let completeUser: ServerMember = result['member'];
+                                    members.push(completeUser);
+                                    this._roomMembers.next(members);
+                                }
+                            );
                             this.list();
                         }
                     } else {
                         // Someone left
                         if(pos != -1) {
+                            console.debug('PRESENCE > Someone left !');
                             // Still a member
                             members.splice(pos, 1);
                             this._roomMembers.next(members);
@@ -64,7 +76,7 @@ export class RoomService implements OnDestroy {
         // We transmit the list of the rooms
         this.subscription_0 = this.api.onListRooms.subscribe(
             result => {
-                console.log('We received rooms');
+                console.debug('RoomService > onListRoom > transmission of the rooms');
                 this._rooms.next(result['rooms']);
             },
             error => {
@@ -75,8 +87,7 @@ export class RoomService implements OnDestroy {
         // We transmit the members of the room
         this.subscription_1 = this.api.onJoinRoom.subscribe(
             result => {
-                console.debug('We received members of (our) room');
-                console.debug(result);
+                console.debug('RoomService > onJoinRoom > refresh of the members ', result);
                 this._roomMembers.next(result['members']);
             },
             error => {
@@ -86,8 +97,10 @@ export class RoomService implements OnDestroy {
 
     }
 
+    // END SETTING
 
-    list() {
+
+    list(): void {
         this.api.listRooms({});
     }
 
@@ -106,12 +119,12 @@ export class RoomService implements OnDestroy {
         return this.api.joinRoom({id:'secretLobbyId'});
     }
 
-    private leaveLobby(): Promise<ServerLeaveRequest> {
-        return this.api.leaveRoom({id:'secretLobbyId'});
+    create(name: string, password: string, delay: number): Promise<ServerRoom> {
+        return this.api.createRoom({name: name, password: password, delay: delay});
     }
 
-    create(name: string): Promise<ServerRoom> {
-        return this.api.createRoom({name: name});
+    getDetails(key: string): Promise<ServerMember> {
+        return this.api.detailRoomMember({userKey:key});
     }
 
     private find(members: Array<ServerMember>, user: string): number {
@@ -126,6 +139,10 @@ export class RoomService implements OnDestroy {
         }
 
         return found;
+    }
+
+    private leaveLobby(): Promise<ServerLeaveRequest> {
+        return this.api.leaveRoom({id:'secretLobbyId'});
     }
 
     ngOnDestroy() {

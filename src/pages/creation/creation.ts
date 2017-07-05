@@ -2,8 +2,6 @@ import { Component } from '@angular/core';
 import { NavController, ViewController, LoadingController, NavParams } from 'ionic-angular';
 import { Game } from '../game/game';
 
-import { ServerRoom, ServerMetadata } from '../../services/server.interfaces.service';
-
 import { RoomService } from '../../services/rooms.service';
 
 @Component({
@@ -13,9 +11,10 @@ import { RoomService } from '../../services/rooms.service';
 export class Creation {
 
     roomName: string = "";
+    roomDelay: number = 30;
+    roomPass: string = "";
 
     constructor(public navCtrl: NavController,
-                public viewCtrl: ViewController,
                 public loadingCtrl: LoadingController,
                 public navParams: NavParams,
                 private roomService: RoomService) {
@@ -30,8 +29,9 @@ export class Creation {
             });
             waiting.present();
 
-            this.roomService.create(this.roomName).then(
+            this.roomService.create(this.roomName, this.roomPass, Math.floor(this.roomDelay)).then(
                 result => {
+                    this.navCtrl.pop();
                     this.navCtrl.setRoot(Game, {data: result['room']});
                     setTimeout(() => {
                         waiting.dismiss();
@@ -42,10 +42,6 @@ export class Creation {
                 }
             );
 
-        }
-
-        dismiss() {
-            this.viewCtrl.dismiss();
         }
 
     }

@@ -16,9 +16,10 @@ export interface ServerMember {
 }
 
 export interface ServerMetadata {
-    creator: string;
-    openDelay: number;
+    creator?: string;
+    openDelay?: number;
     open: boolean;
+    password?: string;
     createdAt: number;
     closedAt?: number;
     type: string;
