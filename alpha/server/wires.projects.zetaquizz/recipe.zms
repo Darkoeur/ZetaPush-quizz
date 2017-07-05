@@ -1,0 +1,37 @@
+
+recipe wires.projects.zetaquizz 1.0.0;
+
+import recipe com.zetapush.core.group 2.0.0 in zpGroupRecipe;
+
+import recipe com.zetapush.core.utils 2.0.0 in zpUtils;
+
+/** Welcome message read from configuration */
+const WELCOME_MESSAGE = @wires.projects.zetaquizz.welcomeMessage;
+
+/** Rooms are opened for a certain time before the game starts */
+const ROOM_CLOSE_DELAY = 60000;
+
+/** Rooms are destroyed automatically */
+const ROOM_DESTROY_DELAY = 600000;
+
+/** Special room : the lobby */
+const ROOM_LOBBY_NAME = "LOBBY";
+
+const ROOM_LOBBY_ID = "secretLobbyId";
+
+/** a simple authentication service */
+service auth = simple(__default);
+
+/** our code is run by this service */
+service code = macro(__default) for 'src';
+
+service zpServiceUserDirectory = userdir(__default).forbiddenVerbs(__all);
+
+/** service allowing to set timers */
+service scheduler = cron(__default);
+
+/** declaring the group service */
+service zpServiceGroups = groups('cr_grp_groups').options({
+	groups_presence_owner: false,
+	groups_presence_group: true
+}).forbiddenVerbs(__all);

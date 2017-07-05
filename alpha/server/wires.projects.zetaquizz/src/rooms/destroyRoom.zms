@@ -1,0 +1,5 @@
+macroscript destroyRoom (string id) {
+	
+	var room = sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::deleteGroup({id:id});
+	
+} return { room } on channel __selfName

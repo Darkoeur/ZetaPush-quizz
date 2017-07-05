@@ -1,0 +1,33 @@
+// we initialize the lobby room
+sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::createGroup({
+		name: ROOM_LOBBY_NAME,
+		id: ROOM_LOBBY_ID,
+		metadata: {
+			open: true
+		},
+		members: []
+});
+
+// we initialize a room which will never be closed
+/*sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::createGroup({
+		name: "DemoRoom",
+		id: "demoRoomIDX19D",
+		metadata: {
+			open: true
+		},
+		members: []
+});*/
+
+// and two accounts
+
+auth.memauth_createUser({
+	login: 'Antoine',
+	password: 'A',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});
+
+auth.memauth_createUser({
+	login: 'Faustine',
+	password: 'F',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});

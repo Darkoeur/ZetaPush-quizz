@@ -1,0 +1,41 @@
+macroscript createRoom(string name = "Unknown", string password = "default", number delay = ROOM_CLOSE_DELAY) {
+	
+	var id = str:rnd36(6);
+	
+	var {result: {group: room}} = sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::createGroup({
+		name: name,
+		id: id,
+		metadata: {
+			creator: __userKey,
+			openDelay: delay*1000,
+			open: true,
+			password: str:md5(password),
+			createdAt: time:now()
+		},
+		members: []
+	}) hardFail;
+	
+	sudo zpUtils::GLOBAL_OWNER scheduler.setTimeout({
+		"parameter" : {
+			"name": "closeRoom",
+			"parameters": {"id": room.id}
+		},
+		"deploymentId" : code,
+		"verb" : "call",
+		"delay" : delay
+	});
+	
+	var taskName = "destroy_" + room.id;
+	
+	sudo zpUtils::GLOBAL_OWNER scheduler.schedule({
+		"cronName": taskName,
+		"parameter" : {
+			"name": "destroyRoom",
+			"parameters": {"id": room.id}
+		},
+		"deploymentId" : code,
+		"verb" : "call",
+		"schedule" : time:now() + ROOM_DESTROY_DELAY
+	});
+	
+} return { room } on channel __selfName

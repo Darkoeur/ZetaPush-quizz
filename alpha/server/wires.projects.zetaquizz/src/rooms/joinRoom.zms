@@ -1,0 +1,32 @@
+macroscript joinRoom (string id) {
+	
+	// Check if room is open
+	var {result: {group: {metadata: {open: isOpen}}}} = sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::getGroup({id:id}) hardFail;
+	
+	// Check if not already member of the room
+	var isMemberOf = call zpGroupRecipe::isMemberOf({
+		id: id,
+		isHardFail: true,
+		owner: zpUtils::GLOBAL_OWNER
+	});
+	
+	var didntJoin = coll:size(isMemberOf.errors) > 0;
+	
+	var join = {};
+	
+	if(isOpen?? && isOpen == true && didntJoin == true) {
+		
+		// Adding the member
+		var {result: success } = sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::addGroupMember({
+			id: id,
+			member: __userKey
+		}) hardFail;
+		
+		join = success;
+		
+	}
+	
+	// Getting the members	
+	var {result: {group: {members: members }}} = sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::getGroup({id: id});
+
+} return { isOpen, join, members } on channel __selfName

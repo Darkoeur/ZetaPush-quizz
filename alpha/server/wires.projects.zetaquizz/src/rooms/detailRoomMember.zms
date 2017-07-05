@@ -1,0 +1,12 @@
+/** Return an entity member (userKey, login) */
+macroscript detailRoomMember (string userKey) {
+	
+	var { users } = zpServiceUserDirectory.userInfo({userKeys : [userKey]});
+	var login = users[userKey]['login'];
+	
+	var member = {
+		userKey: userKey,
+		login: login
+	};
+	
+} return { member }
