@@ -28,8 +28,13 @@
       </ion-item>
 
       <ion-item padding>
-          <ion-input type="number" min="10" max="90" step="5" placeholder="Time" [(ngModel)]="roomDelay" ></ion-input>
+          <ion-input type="number" min="10" max="90" step="5" placeholder="Time before start" [(ngModel)]="roomDelay" ></ion-input>
           <ion-icon clear item-right name="time" class="brick-green"></ion-icon>
+      </ion-item>
+
+      <ion-item padding>
+          <ion-input type="number" min="3" max="15" placeholder="Number of questions" [(ngModel)]="roomQuestions" ></ion-input>
+          <ion-icon clear item-right name="apps" class="brick-orange"></ion-icon>
       </ion-item>
 
       <ion-item padding>

@@ -1,0 +1,26 @@
+/** randomly pick a question from all the questions available */
+macroscript getQuestion() {
+	
+	var {items: {content: result}} = es.search({
+		indices: ['quizz'],
+		query: {
+			"function_score": {
+				"functions": [
+					{
+						"random_score": {
+							"seed": time:now()
+						}
+					}
+				]
+			}
+		},
+		page: {
+			pageSize: 1,
+			pageNumber: 0
+		},
+		types: ['question']
+	});
+	
+	var instance = result[0].data;
+
+} return { instance }

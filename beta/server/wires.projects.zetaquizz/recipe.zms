@@ -1,0 +1,59 @@
+
+recipe wires.projects.zetaquizz 1.0.0;
+
+import recipe com.zetapush.core.group 2.0.0 in zpGroupRecipe;
+
+import recipe com.zetapush.core.utils 2.0.0 in zpUtils;
+
+/** Welcome message read from configuration */
+const WELCOME_MESSAGE = @wires.projects.zetaquizz.welcomeMessage;
+
+/** Rooms are opened for a certain time before the game starts */
+const ROOM_CLOSE_DELAY = 60000;
+
+/** Rooms are destroyed automatically */
+const ROOM_DESTROY_DELAY = 600000;
+
+/** Number of questions each quizz will propose before ending */
+const NUMBER_OF_QUESTIONS = 5;
+
+/** Time left for answering questions */
+const ANSWERING_TIME = 10;
+
+/** Special room : the lobby */
+const ROOM_LOBBY_NAME = "LOBBY";
+
+const ROOM_LOBBY_ID = "secretLobbyId";
+
+const GROUP_SERVICE_DEPL_ID = "cr_grp_groups";
+
+// const DATASET = @@from('dataset.json');
+
+/** a simple authentication service */
+service auth = simple(__default);
+
+/** our code is run by this service */
+service code = macro(__default) for 'src';
+
+/** messaging service allowing to send questions or informations */
+service msg = messaging(__default).options({	
+	messaging_return_channel: 'message'
+});
+
+/** data storage for scores */
+service datastorage = gda(__default).forbiddenVerbs(__all);
+
+/** search engine storing all the questions and answers */
+service es = search(__default).forbiddenVerbs(__all);
+
+/** service we will use to retrieve user logins */
+service zpServiceUserDirectory = userdir(__default).forbiddenVerbs(__all);
+
+/** service allowing to set timers */
+service scheduler = cron(__default);
+
+/** declaring the group service */
+service zpServiceGroups = groups(GROUP_SERVICE_DEPL_ID).options({
+	groups_presence_owner: false,
+	groups_presence_group: true
+}).forbiddenVerbs(__all);

@@ -119,8 +119,8 @@ export class RoomService implements OnDestroy {
         return this.api.joinRoom({id:'secretLobbyId'});
     }
 
-    create(name: string, password: string, delay: number): Promise<ServerRoom> {
-        return this.api.createRoom({name: name, password: password, delay: delay});
+    create(name: string, password: string, delay: number, questions: number): Promise<ServerRoom> {
+        return this.api.createRoom({name: name, password: password, delay: delay, questions: questions});
     }
 
     getDetails(key: string): Promise<ServerMember> {

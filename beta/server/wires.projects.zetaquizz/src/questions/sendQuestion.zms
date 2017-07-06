@@ -1,0 +1,33 @@
+/** macro used only by the server */
+macroscript sendQuestion (string room, number remaining) {
+	
+	var group = GROUP_SERVICE_DEPL_ID + ":" + zpUtils::GLOBAL_OWNER + ":" + room;
+	
+	var {result: {instance: randomQuestion}} = call getQuestion();
+	
+	randomQuestion.time = ANSWERING_TIME;
+	randomQuestion.category = 'QUESTION';
+	
+	sudo zpUtils::GLOBAL_OWNER msg.send({
+		"target" : group,
+		"data" : {
+			"type": "question",
+			"content": randomQuestion,
+			message: "Here is a new question !"
+		
+		}
+	});
+	
+	
+	if(remaining == 0){
+		sudo zpUtils::GLOBAL_OWNER scheduler.setTimeout({
+			"parameter": {
+				"name": "endQuizz",
+				"parameters": {"room": room}
+			},
+			"deploymentId": code,
+			"verb": "call",
+			"delay": ANSWERING_TIME + 2
+		});	
+	}
+}

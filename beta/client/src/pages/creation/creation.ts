@@ -12,6 +12,7 @@ export class Creation {
 
     roomName: string = "";
     roomDelay: number = 30;
+    roomQuestions: number = 5;
     roomPass: string = "";
 
     constructor(public navCtrl: NavController,
@@ -29,7 +30,7 @@ export class Creation {
             });
             waiting.present();
 
-            this.roomService.create(this.roomName, this.roomPass, Math.floor(this.roomDelay)).then(
+            this.roomService.create(this.roomName, this.roomPass, Math.floor(this.roomDelay), Math.floor(this.roomQuestions)).then(
                 result => {
                     this.navCtrl.pop();
                     this.navCtrl.setRoot(Game, {data: result['room']});

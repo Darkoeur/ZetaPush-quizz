@@ -1,0 +1,9 @@
+macroscript listRooms () {
+	
+	var { result: {list: roomsTmp } } = sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::getGroupList({}) hardFail;
+
+	var id = ROOM_LOBBY_ID;
+
+	var rooms = coll:filter(roomsTmp, room -> (room.id != id));
+
+} return { rooms } on channel __selfName

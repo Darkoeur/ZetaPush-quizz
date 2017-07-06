@@ -23,8 +23,8 @@ export class RoomApi extends Api {
         return this.$publish('leaveRoom', {id});
     }
 
-    createRoom({name, password, delay}:{name: string, password: string, delay: number}): Promise<ServerRoom> {
-        return this.$publish('createRoom', {name, password, delay});
+    createRoom({name, password, delay, questions}:{name: string, password: string, delay: number, questions: number}): Promise<ServerRoom> {
+        return this.$publish('createRoom', {name, password, delay, questions});
     }
 
     detailRoomMember({userKey}:{userKey: string}): Promise<ServerMember> {

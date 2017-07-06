@@ -1,0 +1,9 @@
+/** Result : the current user is not anymore in the group with the given id */
+macroscript leaveRoom (string id) {
+	
+	var {result: leave} = sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::removeGroupMember({
+		id: id,
+		member: __userKey
+	});
+	
+} return { leave } on channel __selfName

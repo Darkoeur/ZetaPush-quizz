@@ -1,0 +1,10 @@
+macroscript closeRoom (string id) {
+	
+	var { result: { value: metadata }} = sudo zpUtils::GLOBAL_OWNER call zpUtils::getMetadata({id: id}) hardFail;
+	
+	metadata.open = false;
+	metadata.closedAt = time:now();
+	
+	sudo zpUtils::GLOBAL_OWNER call zpUtils::setMetadata({id: id, metadata: metadata}) hardFail;
+	
+} return { metadata } on channel __selfName

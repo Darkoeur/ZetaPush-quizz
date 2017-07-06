@@ -21,6 +21,7 @@ export class HomePage {
     }
 
     submit() {
+        
         // On success we go to lobby
         this.zpConnection.connect({login: this.login, password: this.password}).then(
             () => {

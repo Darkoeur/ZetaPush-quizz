@@ -222,6 +222,7 @@ export class Game {
       this.timeLeft = this.instance.time;
       this.canAnswer = true;
 
+      clearInterval(this.timer);
       this.timer = setInterval(() => {
           // If it was the last decrease tick
           if(!this.decreaseQuestionTime()){

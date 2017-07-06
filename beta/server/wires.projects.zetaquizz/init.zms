@@ -1,0 +1,64 @@
+// we initialize the lobby room
+sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::createGroup({
+		name: ROOM_LOBBY_NAME,
+		id: ROOM_LOBBY_ID,
+		metadata: {
+			open: true
+		},
+		members: []
+});
+
+// and three accounts
+
+auth.memauth_createUser({
+	login: 'Server',
+	password: 'S',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});
+
+auth.memauth_createUser({
+	login: 'Antoine',
+	password: 'A',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});
+
+auth.memauth_createUser({
+	login: 'Faustine',
+	password: 'F',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});
+
+// preparing the data storage for scores
+datastorage.gda_createTable({
+	'name' : 'scores', 
+	'columns' : [
+		{
+			'name' : 'rooms', 
+			'map' : true, 
+			'type' : GdaDataType_OBJECT
+		}
+	]
+});
+
+
+// setting the index
+
+es.search_createIndex({
+	index: 'quizz',
+	mappings: {
+		question: {
+			properties: {
+				question: {
+					type: "string"
+				},
+				answers: {
+					type: "string"
+				},
+				solution: {
+					type: "string"
+				}
+			}
+			
+		}
+	}
+});
