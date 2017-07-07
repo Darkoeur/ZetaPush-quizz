@@ -1,0 +1,15 @@
+/** Prevent players from entering the room and initialize storage */
+macroscript closeRoom (string id) {
+	
+	var { result: { value: metadata }} = sudo zpUtils::GLOBAL_OWNER call zpUtils::getMetadata({id: id}) hardFail;
+	
+	metadata.open = false;
+	metadata.closedAt = time:now();
+	
+	sudo zpUtils::GLOBAL_OWNER call zpUtils::setMetadata({id: id, metadata: metadata}) hardFail;
+	
+	
+	// Initialization here as we know nobody new will enter now
+	sudo zpUtils::GLOBAL_OWNER call initializeRoomStorage({room : id}) hardFail;
+	
+} return { metadata } on channel __selfName

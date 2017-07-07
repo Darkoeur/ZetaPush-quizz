@@ -1,0 +1,8 @@
+macroscript storeAnswerExpected (string room, string answer) {
+	datastorage.put({
+		table : 'rooms',
+		data : answer,
+		key : room,
+		column : 'answerExpected'
+	});
+}

@@ -1,0 +1,33 @@
+<ion-header>
+    <ion-navbar color="dark">
+
+        <ion-title>
+            <img src="assets/zp_logo.png" alt="X" title="zp logo" />
+            <span class="title">ZetaQuizz</span>
+        </ion-title>
+
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+    <h1>Welcome !</h1>
+
+    <p>First, type your credentials :</p>
+    <ion-item>
+        <ion-label color="primary" stacked>Nickname</ion-label>
+        <ion-input [(ngModel)]="login" type="text" placeholder="Original is better ;)"></ion-input>
+    </ion-item>
+
+    <ion-item>
+        <ion-label color="primary" stacked>Password</ion-label>
+        <ion-input [(ngModel)]="password" type="text" placeholder=""></ion-input>
+    </ion-item>
+
+    <div class="center">
+        <button (click)="submit()" ion-button round icon-only class="submit-btn">
+            <ion-icon name="checkmark"></ion-icon>
+        </button>
+    </div>
+
+</ion-content>

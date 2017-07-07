@@ -1,0 +1,74 @@
+macroscript answerQuestion(string room, string givenAnswer) {
+
+	// Preventing from answering more than once and checking if the player can answer
+	// Both actions in one macro call
+	
+	var {result: {canAnswer: canAnswer}} = sudo zpUtils::GLOBAL_OWNER call heCantAnswer({
+		room : room,
+		member : __userKey
+	}) hardFail;
+	
+	
+	if(canAnswer){
+		// Comparing to the good answer
+		var {result: {answer: goodAnswer}} = sudo zpUtils::GLOBAL_OWNER call getAnswerExpected({room: room}) hardFail;
+		
+
+		var {result: {scores: scores} } = sudo zpUtils::GLOBAL_OWNER call getScores({room: room}) hardFail;
+		
+		var notif = {};
+		
+		// Modifying scores
+		if(givenAnswer == goodAnswer){
+			
+			scores[__userKey] += ANSWERING_REWARD;
+			
+			notif = {
+				message: "Right ! +" + ANSWERING_REWARD + " points !",
+				correct: true,
+				points: ANSWERING_REWARD
+			};
+			
+		} else {
+			
+			scores[__userKey] += ANSWERING_PENALTY;
+			
+			notif = {
+				message: "Wrong... " + ANSWERING_PENALTY + " points",
+				correct: false,
+				points: ANSWERING_PENALTY
+			};
+			
+		}
+		
+		sudo zpUtils::GLOBAL_OWNER call setScore({room : room, member : __userKey, score : scores[__userKey]}) hardFail;
+		
+		// formatting scores to match interface on client
+		var prettyScores = [];
+		for score in scores {
+			prettyScores = list:add(prettyScores, {
+				userKey: score.key,
+				score: score.value
+			});
+		}
+
+		
+		call sendScores({room: room, scores: prettyScores}) hardFail;
+		
+		call notifyMember({room : room, member : __userKey, notif : notif}) hardFail;
+		
+		
+	} else {
+		// Should not happen except if cheating
+		call notifyMember({
+			room : room,
+			member : __userKey,
+			notif : {
+				type: "game",
+				content: {},
+				message: "Can't answer more than once per question."
+			}
+		}) hardFail;
+	}
+	
+}

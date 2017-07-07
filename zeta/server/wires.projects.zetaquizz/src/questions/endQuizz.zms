@@ -1,0 +1,15 @@
+/** Send a message to the room indicating there is no more question */
+macroscript endQuizz (string room) {
+	
+	var group = GROUP_SERVICE_DEPL_ID + ":" + zpUtils::GLOBAL_OWNER + ":" + room;
+	
+	trace(group);
+	
+	sudo zpUtils::GLOBAL_OWNER msg.send({
+		"target" : group,
+		"data" : {
+			"type": "complete",
+			message: "Quizz ended, loading leaderboard..."
+		}
+	});
+}

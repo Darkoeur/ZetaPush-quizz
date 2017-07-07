@@ -1,0 +1,11 @@
+/** Get the state of the room */
+macroscript getState(string room) {
+	
+	var {result: data } = datastorage.get({
+		'table': 'rooms',
+		'key': room
+	});
+	
+	var isFinished = data.isFinished;
+	
+} return { isFinished }

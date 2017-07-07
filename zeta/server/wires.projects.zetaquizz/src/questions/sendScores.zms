@@ -1,0 +1,13 @@
+macroscript sendScores(string room, object scores) {
+	
+	var group = GROUP_SERVICE_DEPL_ID + ":" + zpUtils::GLOBAL_OWNER + ":" + room;
+	
+	sudo zpUtils::GLOBAL_OWNER msg.send({
+		"target" : group,
+		"data" : {
+			"type": "scores",
+			"content": scores,
+			message: "Scores have changed."
+		}
+	});
+}

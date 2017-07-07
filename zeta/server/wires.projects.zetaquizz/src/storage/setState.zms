@@ -1,0 +1,11 @@
+/** Set the state of the room */
+macroscript setState(string room, boolean state) {
+	
+	datastorage.put({
+		'table': 'rooms',
+		'key': room,
+		'column': 'isFinished',
+		'data': state
+	});
+	
+}

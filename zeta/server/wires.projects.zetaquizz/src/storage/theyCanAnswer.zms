@@ -1,0 +1,29 @@
+/** allow all players of a room to answer */
+macroscript theyCanAnswer (string room) {
+	
+	// Getting the members	(login/userKey)
+	var {result: {group: {members: fullMembers }}} = sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::getGroup({id: room});
+	
+	// Selecting only the userKey part
+	var members = [];
+	for member in fullMembers {
+		members = list:add(members, member.userKey);
+	}
+	
+	var data = {};
+	
+	for member in members {
+		data[member] = true;
+	}
+	
+	var request = {'answers': data};
+	
+	datastorage.puts({
+		table : 'rooms',
+		rows: [{
+			key : room,
+			data: request
+		}]		
+	});
+	
+} return { request }

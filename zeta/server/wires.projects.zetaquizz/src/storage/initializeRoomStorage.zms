@@ -1,0 +1,43 @@
+/** preparing the storage dedicated for a room (scores, answers, ...) */
+macroscript initializeRoomStorage(string room) {
+	
+	// Getting the members	(login/userKey)
+	var {result: {group: {members: fullMembers }}} = sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::getGroup({id: room}) hardFail;
+	
+	// Selecting only the userKey part
+	var members = [];
+	for member in fullMembers {
+		members = list:add(members, member.userKey);
+	}
+	
+	// Erasing row
+	datastorage.removeRow({table : 'rooms', key : room});
+	
+	// Allowing members to answer
+	call theyCanAnswer({
+		room: room
+	}) hardFail;
+	
+	// Setting their scores to 0
+	for member in members {
+		call setScore({
+			room: room,
+			member: member,
+			score: 0
+		}) hardFail;
+	}
+	
+	// Giving a fake answer expected (will be changed each time a question is sent)
+	call storeAnswerExpected({
+		room : room,
+		answer : 'None yet.'
+	}) hardFail;
+	
+	// Declaring that the game is not finished
+	call setState({
+		room: room,
+		state: false
+	}) hardFail;
+	
+	
+}

@@ -1,0 +1,10 @@
+/** Delete all rooms (including the lobby) */
+macroscript clearRooms () {
+	
+	var { result: { rooms: rooms } } = call listRooms();
+	
+	for room in rooms {
+		sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::deleteGroup({id: room.id});
+	}
+
+} return { rooms }

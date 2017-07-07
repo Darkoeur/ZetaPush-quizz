@@ -1,0 +1,11 @@
+/** Obtain the answer expected for the room */
+macroscript getAnswerExpected (string room) {
+	
+	var {result: data } = datastorage.get({
+		'table': 'rooms',
+		'key': room
+	});
+	
+	var answer = data.answerExpected;
+	
+} return { answer }

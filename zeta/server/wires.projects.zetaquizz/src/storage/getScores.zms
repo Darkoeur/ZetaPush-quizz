@@ -1,0 +1,10 @@
+macroscript getScores (string room) {
+
+	var {result: data } = sudo zpUtils::GLOBAL_OWNER datastorage.get({
+		'table': 'rooms',
+		'key': room
+	});
+	
+	var scores = data.scores;
+
+} return { scores }

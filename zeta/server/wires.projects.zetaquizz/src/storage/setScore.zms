@@ -1,0 +1,10 @@
+macroscript setScore(string room, string member, number score) {
+	
+	datastorage.put({
+		table : 'rooms',
+		data : score,
+		key : room,
+		key2 : member,
+		column : 'scores'
+	});
+}

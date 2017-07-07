@@ -1,0 +1,146 @@
+// we initialize the lobby room
+sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::createGroup({
+		name: ROOM_LOBBY_NAME,
+		id: ROOM_LOBBY_ID,
+		metadata: {
+			open: true
+		},
+		members: []
+});
+
+// and three accounts
+
+auth.memauth_createUser({
+	login: 'Server',
+	password: 'S',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});
+
+auth.memauth_createUser({
+	login: 'Antoine',
+	password: 'A',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});
+
+auth.memauth_createUser({
+	login: 'Faustine',
+	password: 'F',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});
+
+auth.memauth_createUser({
+	login: 'Alexis',
+	password: 'A',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});
+
+auth.memauth_createUser({
+	login: 'Arthur',
+	password: 'A',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});
+
+auth.memauth_createUser({
+	login: 'Ryan',
+	password: 'R',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});
+
+auth.memauth_createUser({
+	login: 'Victor',
+	password: 'V',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});
+
+auth.memauth_createUser({
+	login: 'Donovan',
+	password: 'D',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});
+
+auth.memauth_createUser({
+	login: 'Erwan',
+	password: 'E',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});
+
+auth.memauth_createUser({
+	login: 'Gwendal',
+	password: 'G',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});
+
+auth.memauth_createUser({
+	login: 'Nicolas',
+	password: 'N',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});
+
+auth.memauth_createUser({
+	login: 'Basile',
+	password: 'B',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});
+
+auth.memauth_createUser({
+	login: 'Samy',
+	password: 'S',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});
+
+auth.memauth_createUser({
+	login: 'Adrien',
+	password: 'A',
+	idempotence: Idempotence_IGNORE_IDENTICAL
+});
+
+
+// preparing the data storage for scores
+datastorage.gda_createTable({
+	'name' : 'rooms', 
+	'columns' : [
+		{
+			'name' : 'scores', 
+			'map' : true, 
+			'type' : GdaDataType_DOUBLE
+		},
+		{
+			'name': 'answers',
+			'map': true,
+			'type': GdaDataType_BOOLEAN
+		},
+		{
+			'name': 'answerExpected',
+			'map': false,
+			'type': GdaDataType_STRING
+		},
+		{
+			'name': 'isFinished',
+			'map': false,
+			'type': GdaDataType_BOOLEAN
+		}
+	]
+});
+
+
+// setting the index
+
+es.search_createIndex({
+	index: 'quizz',
+	mappings: {
+		question: {
+			properties: {
+				question: {
+					type: "string"
+				},
+				answers: {
+					type: "string"
+				},
+				solution: {
+					type: "string"
+				}
+			}
+			
+		}
+	}
+});

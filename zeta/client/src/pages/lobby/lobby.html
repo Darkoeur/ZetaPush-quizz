@@ -1,0 +1,58 @@
+<ion-header>
+
+  <ion-navbar color="dark">
+      <ion-title>
+          <img src="assets/zp_logo.png" alt="X" title="zp logo" />
+          <span class="title">ZetaQuizz</span>
+      </ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+
+    <h1>Rooms</h1>
+
+    <p>Join an existing room or create your own :</p>
+
+    <ion-grid no-padding>
+        <ion-row class="row-labels">
+            <ion-col col-6 id="label-name">
+                <ion-icon name="bookmark"></ion-icon>
+            </ion-col>
+            <ion-col col-3 id="label-people">
+                <ion-icon name="people"></ion-icon>
+            </ion-col>
+            <ion-col col-3 id="label-join">
+                <ion-icon name="lock"></ion-icon>
+            </ion-col>
+        </ion-row>
+
+        <ion-row *ngIf="existingRooms?.length === 0" class="row-room">
+            <ion-col>
+                No room found
+            </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let room of existingRooms" (click)="joinRoom(room)" [ngClass]="{'row-room': true, 'closed': !(room.metadata.open)}">
+            <ion-col col-6>
+                {{room.name}}
+            </ion-col>
+            <ion-col col-3>
+                {{room.members.length}}
+            </ion-col>
+            <ion-col col-3>
+                <ion-icon [name]="room.metadata.open ? 'checkmark' : 'close'" [ngClass]="{'success': room.metadata.open, 'failure': !room.metadata.open}"></ion-icon>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <div padding>
+
+        <button (click)="hostRoom()" color="dark" ion-button icon-end full>
+            create
+            <ion-icon name="home"></ion-icon>
+        </button>
+    </div>
+
+</ion-content>

@@ -1,0 +1,8 @@
+macroscript getRoomData (string room) {
+	
+	var {result: data } = datastorage.get({
+		'table': 'rooms',
+		'key': room
+	});
+	
+} return { data }

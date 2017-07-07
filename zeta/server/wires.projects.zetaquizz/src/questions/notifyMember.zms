@@ -1,0 +1,10 @@
+macroscript notifyMember(string room, string member, object notif) {
+	sudo zpUtils::GLOBAL_OWNER msg.send({
+		"target" : member,
+		"data" : {
+			"type": "notification",
+			"content": notif,
+			message: notif.message
+		}
+	});
+}

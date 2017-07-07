@@ -1,0 +1,52 @@
+/** 
+	Obtain a random question and send it to the room,
+	if it was the last question, schedule the end signal
+*/
+macroscript sendQuestion (string room, number remaining) {
+	
+	var group = GROUP_SERVICE_DEPL_ID + ":" + zpUtils::GLOBAL_OWNER + ":" + room;
+	
+	// Picking question
+	
+	var {result: {instance: randomQuestion}} = call getQuestion();
+	
+	
+	// Allowing to answer and setting the answer expected
+	
+	call storeAnswerExpected({room : room, answer : randomQuestion.solution});
+	call theyCanAnswer({room : room});
+	
+	// Then sending it
+	
+	randomQuestion.time = ANSWERING_TIME;
+	randomQuestion.category = 'QUESTION';
+	
+	randomQuestion.solution = null;
+	
+	// Sending it
+	
+	sudo zpUtils::GLOBAL_OWNER msg.send({
+		"target" : group,
+		"data" : {
+			"type": "question",
+			"content": randomQuestion,
+			message: "Here is a new question !"
+		}
+	});
+	
+
+	
+	// Schedule end signal if it was last question
+	
+	if(remaining == 0){
+		sudo zpUtils::GLOBAL_OWNER scheduler.setTimeout({
+			"parameter": {
+				"name": "endQuizz",
+				"parameters": {"room": room}
+			},
+			"deploymentId": code,
+			"verb": "call",
+			"delay": ANSWERING_TIME + 2
+		});	
+	}
+}

@@ -1,0 +1,35 @@
+macroscript test() {
+
+	var id = "bidule2";
+
+	var {result: {group: room}} = sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::createGroup({
+		name: "TestRoom",
+		id: id,
+		metadata: {
+			creator: __userKey,
+			openDelay: 42,
+			open: true,
+			password: str:md5("bidule"),
+			createdAt: time:now()
+		},
+		members: []
+	}) hardFail;
+	
+	sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::addGroupMember({
+			id: id,
+			member: "ZmNIzos51MyhTwBv0rErBA"
+	}) hardFail;
+	
+	var grp = sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::getGroup({id: id}) hardFail;
+	
+	trace(grp);
+	
+	call closeRoom({id: id});
+	
+}	
+
+
+macroscript key() {
+	var key = __userKey;
+} return { key }
+

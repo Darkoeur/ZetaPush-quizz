@@ -1,0 +1,19 @@
+/** return if the player can answer and then revoke his right to answer */
+macroscript heCantAnswer(string room, string member) {
+	
+	var {result: data } = datastorage.get({
+		'table': 'rooms',
+		'key': room
+	});
+	
+	var canAnswer = data.answers[member];
+	
+	datastorage.put({
+		'table': 'rooms',
+		'column': 'answers',
+		'key': room,
+		'key2': member,
+		data: false
+	});
+	
+} return { canAnswer }
