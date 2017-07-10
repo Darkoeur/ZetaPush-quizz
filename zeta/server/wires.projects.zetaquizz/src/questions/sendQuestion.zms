@@ -39,6 +39,8 @@ macroscript sendQuestion (string room, number remaining) {
 	// Schedule end signal if it was last question
 	
 	if(remaining == 0){
+		
+		// 1°) End quizz
 		sudo zpUtils::GLOBAL_OWNER scheduler.setTimeout({
 			"parameter": {
 				"name": "endQuizz",
@@ -46,7 +48,34 @@ macroscript sendQuestion (string room, number remaining) {
 			},
 			"deploymentId": code,
 			"verb": "call",
-			"delay": ANSWERING_TIME + 2
+			"delay": ANSWERING_TIME + 1
+		});	
+		
+		// 2°) Destroy room
+		var taskName = "destroy_" + room;
+	
+		sudo zpUtils::GLOBAL_OWNER scheduler.schedule({
+			"cronName": taskName,
+			"parameter" : {
+				"name": "destroyRoom",
+				"parameters": {"id": room}
+			},
+			"deploymentId" : code,
+			"verb" : "call",
+			"schedule" : time:now() + ROOM_DESTROY_DELAY
+		});
+		
+	} else {
+		
+		// 2°) Send next question
+		sudo zpUtils::GLOBAL_OWNER scheduler.setTimeout({
+			"parameter": {
+				"name": "sendQuestion",
+				"parameters": {"room": room, "remaining": (remaining - 1)}
+			},
+			"deploymentId": code,
+			"verb": "call",
+			"delay": ANSWERING_TIME + 1
 		});	
 	}
 }

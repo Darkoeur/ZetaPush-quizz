@@ -9,6 +9,7 @@ import { ServerCommunication, ServerQuestion, ServerScore } from '../../service
 import { RoomService } from '../../services/rooms.service';
 import { QuizzService } from '../../services/quizz.service';
 import { HomePage } from '../home/home';
+import { Lobby } from '../lobby/lobby';
 
 @Component({
   selector: 'page-game',
@@ -116,11 +117,13 @@ export class Game {
       // Leaving the room
       this.roomService.leave(this.gameData.id).then(
           () => {
-              // Disconnecting from ZetaPush
-              this.zpConnection.disconnect();
 
-              // Coming back Home
-              this.navCtrl.setRoot(HomePage);
+              // Join the lobby room (idempotent)
+              this.roomService.joinLobby();
+
+              // Show the associated view
+              this.navCtrl.setRoot(Lobby);
+
           }
 
       );

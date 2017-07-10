@@ -3,8 +3,11 @@ import { NavController, ModalController, AlertController, NavParams } from 'ioni
 
 import { Creation } from '../creation/creation';
 import { Game } from '../game/game';
+import { HomePage } from '../home/home';
 import { ServerRoom } from '../../services/server.room-interfaces.service';
 import { RoomService } from '../../services/rooms.service';
+
+import { ZetaPushConnection } from 'zetapush-angular';
 
 @Component({
     selector: 'page-lobby',
@@ -20,7 +23,8 @@ export class Lobby {
         public modalCtrl: ModalController,
         public alertCtrl: AlertController,
         public navParams: NavParams,
-        private roomService: RoomService) {
+        private roomService: RoomService,
+        private zpConnection: ZetaPushConnection) {
 
         }
 
@@ -78,13 +82,28 @@ export class Lobby {
         }
 
 
-        // When the user would like to create is own room
+        // When the user would like to create his own room
         hostRoom() {
             this.goToCreation();
         }
 
         goToCreation() {
             this.navCtrl.push(Creation);
+        }
+
+        exit() {
+            // Leaving the room
+            this.roomService.leaveLobby().then(
+                () => {
+
+                    this.zpConnection.disconnect();
+                    // Back to login screen
+                    this.navCtrl.setRoot(HomePage);
+
+                }
+
+            );
+
         }
 
     }

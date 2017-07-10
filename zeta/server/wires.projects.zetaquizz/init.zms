@@ -1,4 +1,4 @@
-// we initialize the lobby room
+// LOBBY ROOM CREATION
 sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::createGroup({
 		name: ROOM_LOBBY_NAME,
 		id: ROOM_LOBBY_ID,
@@ -7,9 +7,23 @@ sudo zpUtils::GLOBAL_OWNER call zpGroupRecipe::createGroup({
 		},
 		members: []
 });
+// END LOBBY ROOM CREATION
 
-// and three accounts
+// LISTENING PRESENCES
+/*
+zpUtils::zpServiceTrigger.trigger_addApiListener({
+	'deploymentId': code,
+	'trigger': {
+		'deploymentId': GROUP_SERVICE_DEPL_ID,
+		'verb': Verb
+	}
+});
+*/
+// END LISTENING PRESENCES
 
+
+
+// ACCOUNTS INITIALIZATION
 auth.memauth_createUser({
 	login: 'Server',
 	password: 'S',
@@ -27,75 +41,9 @@ auth.memauth_createUser({
 	password: 'F',
 	idempotence: Idempotence_IGNORE_IDENTICAL
 });
+// END ACCOUNTS INITIALIZATION
 
-auth.memauth_createUser({
-	login: 'Alexis',
-	password: 'A',
-	idempotence: Idempotence_IGNORE_IDENTICAL
-});
-
-auth.memauth_createUser({
-	login: 'Arthur',
-	password: 'A',
-	idempotence: Idempotence_IGNORE_IDENTICAL
-});
-
-auth.memauth_createUser({
-	login: 'Ryan',
-	password: 'R',
-	idempotence: Idempotence_IGNORE_IDENTICAL
-});
-
-auth.memauth_createUser({
-	login: 'Victor',
-	password: 'V',
-	idempotence: Idempotence_IGNORE_IDENTICAL
-});
-
-auth.memauth_createUser({
-	login: 'Donovan',
-	password: 'D',
-	idempotence: Idempotence_IGNORE_IDENTICAL
-});
-
-auth.memauth_createUser({
-	login: 'Erwan',
-	password: 'E',
-	idempotence: Idempotence_IGNORE_IDENTICAL
-});
-
-auth.memauth_createUser({
-	login: 'Gwendal',
-	password: 'G',
-	idempotence: Idempotence_IGNORE_IDENTICAL
-});
-
-auth.memauth_createUser({
-	login: 'Nicolas',
-	password: 'N',
-	idempotence: Idempotence_IGNORE_IDENTICAL
-});
-
-auth.memauth_createUser({
-	login: 'Basile',
-	password: 'B',
-	idempotence: Idempotence_IGNORE_IDENTICAL
-});
-
-auth.memauth_createUser({
-	login: 'Samy',
-	password: 'S',
-	idempotence: Idempotence_IGNORE_IDENTICAL
-});
-
-auth.memauth_createUser({
-	login: 'Adrien',
-	password: 'A',
-	idempotence: Idempotence_IGNORE_IDENTICAL
-});
-
-
-// preparing the data storage for scores
+// DATASTORAGE
 datastorage.gda_createTable({
 	'name' : 'rooms', 
 	'columns' : [
@@ -121,10 +69,9 @@ datastorage.gda_createTable({
 		}
 	]
 });
+// END DATASTORAGE
 
-
-// setting the index
-
+// INDEX STORING QUESTIONS
 es.search_createIndex({
 	index: 'quizz',
 	mappings: {
@@ -144,3 +91,4 @@ es.search_createIndex({
 		}
 	}
 });
+// END INDEX STORING QUESTIONS

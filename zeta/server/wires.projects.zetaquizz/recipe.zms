@@ -46,7 +46,7 @@ service msg = messaging(__default).options({
 	messaging_return_channel: 'message'
 });
 
-/** data storage for scores */
+/** data storage for scores & answers */
 service datastorage = gda(__default).forbiddenVerbs(__all);
 
 /** search engine storing all the questions and answers */
@@ -57,6 +57,9 @@ service zpServiceUserDirectory = userdir(__default).forbiddenVerbs(__all);
 
 /** service allowing to set timers */
 service scheduler = cron(__default);
+
+/** service for setting listeners */
+service trigger = trigger(__default).forbiddenVerbs(__all);
 
 /** declaring the group service */
 service zpServiceGroups = groups(GROUP_SERVICE_DEPL_ID).options({

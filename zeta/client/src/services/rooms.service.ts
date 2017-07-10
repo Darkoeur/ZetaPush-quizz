@@ -88,7 +88,8 @@ export class RoomService implements OnDestroy {
         this.subscription_1 = this.api.onJoinRoom.subscribe(
             result => {
                 console.debug('RoomService > onJoinRoom > refresh of the members ', result);
-                this._roomMembers.next(result['members']);
+                let members = result['members'].filter(this.hasLogin);
+                this._roomMembers.next(members);
             },
             error => {
                 // nothing
@@ -141,7 +142,11 @@ export class RoomService implements OnDestroy {
         return found;
     }
 
-    private leaveLobby(): Promise<ServerLeaveRequest> {
+    private hasLogin(member: ServerMember): boolean {
+        return (member.login != null);
+    }
+
+    leaveLobby(): Promise<ServerLeaveRequest> {
         return this.api.leaveRoom({id:'secretLobbyId'});
     }
 

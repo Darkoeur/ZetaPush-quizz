@@ -23,12 +23,12 @@
     <ion-list inset padding text-center id="creation-form">
 
       <ion-item padding>
-        <ion-input type="text" placeholder="Name" [(ngModel)]="roomName" ></ion-input>
+        <ion-input type="text" placeholder="Name" pattern="[A-Za-z0-9\ ]{1,}" [(ngModel)]="roomName" ></ion-input>
         <ion-icon clear item-right name="bookmark" class="brick-blue"></ion-icon>
       </ion-item>
 
       <ion-item padding>
-          <ion-input type="number" min="10" max="90" step="5" placeholder="Time before start" [(ngModel)]="roomDelay" ></ion-input>
+          <ion-input type="number" min="10" max="60" step="5" placeholder="Time before start" [(ngModel)]="roomDelay" ></ion-input>
           <ion-icon clear item-right name="time" class="brick-green"></ion-icon>
       </ion-item>
 
