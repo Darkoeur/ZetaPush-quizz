@@ -35,7 +35,9 @@ Once answering server notifies you about the correctness and then refresh scores
 
 ![alt text][gameAnswer]
 
-At the end game ladder is displayed, and the players can return to lobby.
+At the end a game ladder is displayed, and the players can return to lobby.
+
+![alt text][gameLadder]
 
 ## Fifth step : game (after)
 
