@@ -21,7 +21,9 @@ macroscript createRoom(
 			openDelay: delay*1000,
 			open: true,
 			password: str:md5(password),
-			createdAt: time:now()
+			createdAt: time:now(),
+			progressMaxQ: questions,
+			progressCurrentQ: 0
 		},
 		members: []
 	}) hardFail;

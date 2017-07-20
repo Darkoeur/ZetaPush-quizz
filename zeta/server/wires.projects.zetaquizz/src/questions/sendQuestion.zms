@@ -34,6 +34,12 @@ macroscript sendQuestion (string room, number remaining) {
 		}
 	});
 	
+	
+	
+	// Changing metadata - NOT WORKING YET
+	var { result: { value }} = sudo zpUtils::GLOBAL_OWNER call zpUtils::getMetadata({ id: room });
+	value.progressCurrentQ += 1;
+	sudo zpUtils::GLOBAL_OWNER call zpUtils::setMetadata({ id: room, metadata: value });
 
 	
 	// Schedule end signal if it was last question
